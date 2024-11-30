@@ -13,6 +13,8 @@ This repository is a collection of scripts and examples for learning and explori
   - [Query Ethereum Account Balance](#query-ethereum-account-balance)
   - [Fetch ERC-20 Token Details](#fetch-erc-20-token-details)
   - [Monitor Transfer Events](#monitor-transfer-events)
+  - [Inspect Ethereum Blocks](#inspect-ethereum-blocks)
+  - [Fetch Latest Transactions](#fetch-latest-transactions)
 
 
 ---
@@ -74,5 +76,24 @@ Before running the examples, ensure you have the following installed:
     - Outputs transfer details for analysis.
 - Run :
 ```bash node transfer-events.js```
+
+4. Inspect Ethereum Blocks
+- Script: block-details.js
+- Description: Fetches details of the latest Ethereum block and its transactions.
+- Key Functionality:
+    - Retrieves block details without and with transactions.
+    - Logs the first transaction details for a sample block.
+- Run:
+```bash node block-details.js```
+
+5. Fetch Latest Transactions
+- Script: latest-transactions.js
+- Description: Decodes and inspects transactions from the latest block.
+- Key Functionality:
+    - Extracts transaction hashes from blocks.
+    - Fetches and logs individual transaction details.
+- Run:
+```bash node latest-transactions.js```
+
 
 
