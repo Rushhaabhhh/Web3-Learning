@@ -6,7 +6,7 @@ Solidity is a statically-typed, contract-oriented programming language designed 
 **Basic Contract Template:**
 
 ```jsx
-text// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
 contract MyContract {
@@ -90,7 +90,7 @@ contract MyContract {
         return _number;
     }
 
-    // Pure function (no state access)
+    // Pure function (no read/write on data access)
     function addNumbers(uint256 a, uint256 b) public pure returns (uint256) {
         return a + b;
     }
@@ -118,10 +118,26 @@ contract MyContract {
 
 - `view`: Reads blockchain state but doesn't modify it
 - `pure`: No state access, purely computational
-- `payable`: Can receive Ether payments[metana+2](https://metana.io/blog/solidity-functions-types-and-use-cases/)
+- `payable`: Can receive Ether payments
+
+It is important to note that you cannot transfer Ether to an address unless that address is of type `address payable`. But the `_owner` variable is of type `uint160`, meaning that we must explicitly cast it to `address payable`.
+
+Once you cast the address from `uint160` to `address payable`, you can transfer Ether to that address using the `transfer` function, and `address(this).balance` will return the total balance stored on the contract.
+
 
 
 ## Memory vs Storage
+
+**Memory :** Temporary storage during function execution, cheaper gas, cleared after function ends.
+
+**Storage :** Permanent blockchain storage, expensive gas costs, persists between function calls.
+
+**Data Location Rules :**
+
+- State variables are always in storage
+- Function parameters are in memory by default
+- Reference types must specify location (memory/storage/calldata)
+- Value types (uint, bool, address) don't need location specification
 
 **Reference Types Must Specify Location:**
 
@@ -132,7 +148,7 @@ function processArray(uint[] memory _data) public {
 
 function modifyState(uint[] storage _data) internal {
     // _data references storage (permanent)
-
+} 
 ```
 
 
@@ -302,36 +318,6 @@ import * as MyModule from "./MyModule.sol";
 ```
 
 
-## Storage vs Memory
-
-**Storage :** Permanent blockchain storage, expensive gas costs, persists between function calls.
-
-**Memory :** Temporary storage during function execution, cheaper gas, cleared after function ends.
-
-```solidity
-contract DataLocation {
-    uint[] public storageArray; // State variable in storage
-    
-    function addToArray(uint[] memory _tempArray) public {
-        // _tempArray is in memory (temporary)
-        storageArray = _tempArray; // Copy from memory to storage
-    }
-    
-    function processArray() public view returns (uint[] memory) {
-        uint[] memory tempArray = new uint[](3); // Memory allocation
-        tempArray[0] = storageArray[0];
-        return tempArray; // Returns memory array
-    }
-}
-```
-
-**Data Location Rules:**
-
-- State variables are always in storage
-- Function parameters are in memory by default
-- Reference types must specify location (memory/storage/calldata)
-- Value types (uint, bool, address) don't need location specification
-
 
 ## Interfaces
 
@@ -432,3 +418,7 @@ Solidity provides special variables and units for working with time:
 
 - **`block.timestamp`**: returns the current Unix timestamp (seconds since Jan 1, 1970).
 - Units: **`seconds`**, **`minutes`**, **`hours`**, **`days`**, **`weeks`**, **`years`** (all convert to seconds).
+
+---
+
+https://ethereum.stackexchange.com/questions/191/how-can-i-securely-generate-a-random-number-in-my-smart-contract
